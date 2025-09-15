@@ -1,1 +1,128 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define PI 3.14159265358979323846
+
+/* Function prototypes */
+void generate_sine(int bits, int samples);
+void generate_triangle(int bits, int samples);
+void generate_sawtooth(int bits, int samples);
+void generate_square(int bits, int samples);
+
+int main(void) {
+    int choice, bits, samples;
+
+    printf("=== Waveform ROM Generator ===\n");
+    printf("1 - Sine\n");
+    printf("2 - Triangle\n");
+    printf("3 - Sawtooth\n");
+    printf("4 - Square\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    printf("Enter bit width (e.g., 8, 10, 12): ");
+    scanf("%d", &bits);
+    printf("Enter number of samples (e.g., 32, 64): ");
+    scanf("%d", &samples);
+
+    switch (choice) {
+        case 1:
+            generate_sine(bits, samples);
+            break;
+        case 2:
+            generate_triangle(bits, samples);
+            break;
+        case 3:
+            generate_sawtooth(bits, samples);
+            break;
+        case 4:
+            generate_square(bits, samples);
+            break;
+        default:
+            printf("Invalid choice!\n");
+            break;
+    }
+
+    /* Wait for user input before closing */
+    printf("\nPress Enter to exit...");
+    getchar(); /* Clear the newline character from previous input */
+    getchar(); /* Wait for user input */
+
+    return 0;
+}
+
+/* Sine wave */
+void generate_sine(int bits, int samples) {
+    int i;
+    unsigned int max_val = (1U << bits) - 1;
+    printf("\ntype rom_type is array (0 to %d) of std_logic_vector(%d downto 0);\n", 
+           samples - 1, bits - 1);
+    printf("constant sin_rom : rom_type := (\n");
+
+    for (i = 0; i < samples; i++) {
+        double angle = (2.0 * PI * i) / (double)samples;
+        double val = (sin(angle) + 1.0) / 2.0;
+        unsigned int d = (unsigned int)(val * max_val + 0.5);
+        printf("    X\"%0*X\"", (bits + 3) / 4, d);
+        if (i != samples - 1) printf(",");
+        if ((i + 1) % 4 == 0) printf("  -- %d-%d\n", i - 3, i);
+    }
+    printf("\n);\n");
+}
+
+/* Triangle wave */
+void generate_triangle(int bits, int samples) {
+    int i;
+    unsigned int max_val = (1U << bits) - 1;
+    printf("\ntype rom_type is array (0 to %d) of std_logic_vector(%d downto 0);\n", 
+           samples - 1, bits - 1);
+    printf("constant tri_rom : rom_type := (\n");
+
+    for (i = 0; i < samples; i++) {
+        double phase = (double)i / (double)samples;
+        double val = (phase < 0.5) ? (phase * 2.0) : (2.0 - 2.0 * phase);
+        unsigned int d = (unsigned int)(val * max_val + 0.5);
+        printf("    X\"%0*X\"", (bits + 3) / 4, d);
+        if (i != samples - 1) printf(",");
+        if ((i + 1) % 4 == 0) printf("  -- %d-%d\n", i - 3, i);
+    }
+    printf("\n);\n");
+}
+
+/* Sawtooth wave */
+void generate_sawtooth(int bits, int samples) {
+    int i;
+    unsigned int max_val = (1U << bits) - 1;
+    printf("\ntype rom_type is array (0 to %d) of std_logic_vector(%d downto 0);\n", 
+           samples - 1, bits - 1);
+    printf("constant saw_rom : rom_type := (\n");
+
+    for (i = 0; i < samples; i++) {
+        double val = (double)i / (double)(samples - 1);
+        unsigned int d = (unsigned int)(val * max_val + 0.5);
+        printf("    X\"%0*X\"", (bits + 3) / 4, d);
+        if (i != samples - 1) printf(",");
+        if ((i + 1) % 4 == 0) printf("  -- %d-%d\n", i - 3, i);
+    }
+    printf("\n);\n");
+}
+
+/* Square wave */
+void generate_square(int bits, int samples) {
+    int i;
+    unsigned int max_val = (1U << bits) - 1;
+    printf("\ntype rom_type is array (0 to %d) of std_logic_vector(%d downto 0);\n", 
+           samples - 1, bits - 1);
+    printf("constant sqr_rom : rom_type := (\n");
+
+    for (i = 0; i < samples; i++) {
+        double val = (i < samples / 2) ? 1.0 : 0.0;
+        unsigned int d = (unsigned int)(val * max_val + 0.5);
+        printf("    X\"%0*X\"", (bits + 3) / 4, d);
+        if (i != samples - 1) printf(",");
+        if ((i + 1) % 4 == 0) printf("  -- %d-%d\n", i - 3, i);
+    }
+    printf("\n);\n");
+}
 
