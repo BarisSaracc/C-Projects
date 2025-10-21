@@ -1,10 +1,21 @@
+/*
+
+This project contains a C program that generates the bit map 
+used to initialize the Block RAM for a Direct Digital Synthesizer (DDS) on FPGA.
+The program calculates one full period of a sine wave and converts the amplitude
+values into digital samples.
+These samples are stored as a lookup table (LUT), which is later used in the VHDL
+design to produce the waveform.
+
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 #define PI 3.14159265358979323846
 
-/* Function prototypes */
+
 void generate_sine(int bits, int samples);
 void generate_triangle(int bits, int samples);
 void generate_sawtooth(int bits, int samples);
