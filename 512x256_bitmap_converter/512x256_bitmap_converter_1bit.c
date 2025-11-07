@@ -19,14 +19,15 @@
 
 
 /* ================================================
-   Put your raw bitmap data here.
+   Put your raw bitmap data here (as uint16_t items).
    Example: 0xFF, 0x00, 0xAA, 0x55, ...
+   Only the low byte of each uint16_t is used.
    ================================================ */
 const uint16_t lcd_bitmap[] = {
-    /* 🔽🔽🔽 Insert your data here 🔽🔽🔽 */
+    /* ▼▼▼ Insert your data here ▼▼▼ */
 
 
-    /* 🔼🔼🔼 Insert your data here 🔼🔼🔼 */
+    /* ▲▲▲ Insert your data here ▲▲▲ */
 };
 /* ================================================ */
 
@@ -81,7 +82,7 @@ int main(void)
             unsigned shift = BIT_MSB_LEFT ? (7u - bit_in_byte) : bit_in_byte;
             unsigned bit = (b >> shift) & 1u;
             unsigned white = SOURCE_ONE_IS_WHITE ? bit : (bit ^ 1u);
-            printf("\"%c\"", white ? '1' : '0');
+            printf("'%c'", white ? '1' : '0');   /* <-- single quotes */
             if (x < IMG_W - 1) printf(", ");
         }
         printf(",\n\n");
